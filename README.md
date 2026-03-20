@@ -15,5 +15,5 @@ The data used in this training is accessed from [Open Aerial Maps](https://opena
 
 # Computational environment
 The notebooks are designed to run on [Google Colab](https://colab.research.google.com/), which also provides free basic computing resources, but for very high projects that demand high-performance resources, one could consider either a subscription-based or other local resources. 
-Please note that while running the training and inference, try to chnage the runtime to GPU resources. 
+Please note that while running the training and inference, try to chnage the runtime to GPU resources. More information on usage and resource optimisation in  [Google Colab can be accessed here ](https://colab.research.google.com/)
 
