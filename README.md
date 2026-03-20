@@ -25,4 +25,8 @@ Please note that these models treat Earth observation images as any image, and t
 
 # Usage 
 
-Please download this repository, unzip and load it to [Google Drive](https://drive.google.com/), which is always easy to bridge with Google Colab. Then, to execute, double-click the Notebooks, and it will redirect to Google Colab. If you want to run in your local environment, please consider installing neccessary packages.
+- Please download this repository, unzip and load it to [Google Drive](https://drive.google.com/), which is always easy to bridge with Google Colab.
+- Then, to execute, double-click the Notebooks, and it will redirect to Google Colab. If you want to run in your local environment, please consider installing neccessary packages.
+- SAM3 weights are only accessible from [Hugging Face](https://huggingface.co/) with registration. If you do not have an account on Hugging Face, you have to create an account and request usage for SAM3. Once it is approved, create a token in your Hugging Face account and paste it when it's required. This is mainly for SAM3 interactive segmentation.
+
+
