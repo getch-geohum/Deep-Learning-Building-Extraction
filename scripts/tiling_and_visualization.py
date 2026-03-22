@@ -8,37 +8,68 @@ from tqdm import tqdm
 from rasterio.warp import transform_bounds
 from shapely.geometry import Polygon
 import leafmap
+import random
+from glob import glob
+import matplotlib.pyplot as plt
+from skimage.io import imread
 
-def tile_visualize(raster_file, tile_height, tile_width, stride_y, stride_x):
-  alls = []
+def plot_binary_mask(file_path, n_samples, fig_size = 28):
+  images = sorted(glob(file_path + "/images/*.tif"))  # assuming the image is in .tif format
 
-  with rasterio.open(raster_file) as src:
-          height = src.height
-          width = src.width
-          transform = src.transform
-          crs = src.crs
-          epsg = int(crs.to_epsg())
+  assert len(images) > 0, "No images found in the specified directory."
 
-          for y in tqdm(range(0, height, stride_y)):
-              for x in range(0, width, stride_x):
-                  
-                  # Create window
-                  window_ = Window(x, y, tile_width, tile_height)
-                  window_bounds_ = bounds(window_, transform)
-                  latlon_bounds = transform_bounds(src.crs, f'EPSG:{epsg}', *window_bounds_)
-                  min_lon, min_lat, max_lon, max_lat = latlon_bounds
-                  poly = Polygon(((min_lon, min_lat), (min_lon, max_lat), (max_lon, max_lat), (max_lon, min_lat), (min_lon, min_lat)))
-                  alls.append(poly)
+  if n_samples > len(images):
+    n_samples = len(images)
 
-  series = gpd.GeoSeries(alls)
-  vals = {'ID': [f'{i}' for i in range(len(series.geometry))],
-              'geometry': series.geometry}
+  indexes = random.sample(list(range(0, len(images))), n_samples)
 
-  gdf = gpd.GeoDataFrame(vals).set_crs(epsg=epsg)
+  scale = 2/n_samples
+  fig, ax = plt.subplots(n_samples, 2, figsize=(fig_size*scale, fig_size))
 
-  m = leafmap.Map()
-  m.add_gdf(gdf)
-  m.add_raster(raster_file, layer_name="raster")
+  for i, index in enumerate(indexes):
+    image = imread(images[index])
+    mask = imread(images[index].replace("/images/", "/labels/"))
+    ax[i][0].imshow(image)
+    ax[i][1].imshow(mask)
+    ax[i][0].axis("off")
+    ax[i][1].axis("off")
+  plt.show()
+
+def tile_visualize(raster_file, tile_height, tile_width, stride_y, stride_x, with_tiles):
+  if with_tiles:
+    alls = []
+
+    with rasterio.open(raster_file) as src:
+            height = src.height
+            width = src.width
+            transform = src.transform
+            crs = src.crs
+            epsg = int(crs.to_epsg())
+
+            for y in tqdm(range(0, height, stride_y)):
+                for x in range(0, width, stride_x):
+                    
+                    # Create window
+                    window_ = Window(x, y, tile_width, tile_height)
+                    window_bounds_ = bounds(window_, transform)
+                    latlon_bounds = transform_bounds(src.crs, f'EPSG:{epsg}', *window_bounds_)
+                    min_lon, min_lat, max_lon, max_lat = latlon_bounds
+                    poly = Polygon(((min_lon, min_lat), (min_lon, max_lat), (max_lon, max_lat), (max_lon, min_lat), (min_lon, min_lat)))
+                    alls.append(poly)
+
+    series = gpd.GeoSeries(alls)
+    vals = {'ID': [f'{i}' for i in range(len(series.geometry))],
+                'geometry': series.geometry}
+
+    gdf = gpd.GeoDataFrame(vals).set_crs(epsg=epsg)
+
+    m = leafmap.Map()
+    m.add_gdf(gdf, layer_name="vector_tile")
+    m.add_raster(raster_file, layer_name="raster")
+
+  else:
+    m = leafmap.Map()
+    m.add_raster(raster_file, layer_name="raster")
 
   return m
 
@@ -191,7 +222,7 @@ def tile_raster(input_raster, output_dir, tile_size, stride, input_mask_file=Non
 
     print(f"\nSuccessfully created {len(saved_chips)} chips")
         
-    return saved_chips
+    return None
 
 def is_completely_background(tile, background_value=0):
     """
