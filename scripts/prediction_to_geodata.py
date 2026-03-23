@@ -198,8 +198,11 @@ def binary_raster_to_vector(raster_path, output_path=None, mask_value=1,
 
     # Save if output path provided
     if output_path and len(gdf) > 0:
-        gdf.to_file(output_path)
+        gdf.to_file(output_path, driver='GeoJSON')
         print(f"Saved {len(gdf)} polygons to {output_path}")
+
+        output_path_gpk = output_path.replace(".geojson", ".gpkg")
+        gdf.to_file(output_path_gpk, layer='buildings', driver="GPKG")
 
     return gdf
 
@@ -264,7 +267,9 @@ def yolo_segment_to_shapefile(
     conf_threshold=0.25,
     iou_threshold=0.45,
     device='cuda' if torch.cuda.is_available() else 'cpu',
-    class_names=None
+    class_names=None,
+    min_area=1,
+    simplify_tolerance=0.5
 ):
     """
     Perform YOLO instance segmentation inference and save results as shapefile
@@ -329,7 +334,8 @@ def yolo_segment_to_shapefile(
                         transform, 
                         width, 
                         height,
-                        min_area=10  # Minimum area in pixels to filter small polygons
+                        min_area=min_area,
+                        simplify_tolerance=simplify_tolerance  # Minimum area in pixels to filter small polygons
                     )
                     
                     for polygon in polygons:
@@ -358,14 +364,13 @@ def yolo_segment_to_shapefile(
     }, crs=crs)
     
     # Save to shapefile
-    output_path = output_shapefile if output_shapefile.endswith('.shp') else f"{output_shapefile}.shp"
-    gdf.to_file(output_path)
 
+    gdf.to_file(output_shapefile, driver='GeoJSON')
 
-    geojson_path = output_path.replace('.shp', '.geojson')
-    gdf.to_file(geojson_path, driver='GeoJSON')
+    output_path_gpk = output_shapefile.replace(".geojson", ".gpkg")
+    gdf.to_file(output_path_gpk, layer='buildings', driver="GPKG")
     
-    print(f"\nResults saved to {output_path}")
+    print(f"\nResults saved to {output_shapefile}")
     print(f"Total polygons: {len(gdf)}")
     print(f"Classes detected: {gdf['class_name'].unique()}")
     print(f"Confidence range: {gdf['confidence'].min():.3f} - {gdf['confidence'].max():.3f}")
@@ -627,14 +632,12 @@ def yolo_obb_to_shapefile(
     gdf['perimeter'] = gdf.geometry.length
     
     # Save to shapefile
-    output_path = output_shapefile if output_shapefile.endswith('.shp') else f"{output_shapefile}.shp"
-    gdf.to_file(output_path)
+    gdf.to_file(output_shapefile, driver='GeoJSON')
+
+    output_path_gpk = output_shapefile.replace(".geojson", ".gpkg")
+    gdf.to_file(output_path_gpk, layer='buildings', driver="GPKG")
     
-    # Also save as GeoJSON for better attribute handling
-    geojson_path = output_path.replace('.shp', '.geojson')
-    gdf.to_file(geojson_path, driver='GeoJSON')
-    
-    print(f"\nResults saved to {output_path}")
+    print(f"\nResults saved to {output_shapefile}")
     print(f"Total oriented objects: {len(gdf)}")
     print(f"Classes detected: {gdf['class_name'].unique()}")
     print(f"Confidence range: {gdf['confidence'].min():.3f} - {gdf['confidence'].max():.3f}")
