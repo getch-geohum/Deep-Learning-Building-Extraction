@@ -71,34 +71,37 @@ pixi install
 ```
 Then, verify proper installation by running the following in the terminal
 
-´´´
+```
 pixi run python -c "import torch; print('PyTorch:', torch.__version__); print('CUDA available:', torch.cuda.is_available()); print('GPU:', (torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'None'))"
-
-´´´
+```
 
 To properly use the installed pixi environment, please run the following in the terminal
 
-´´´
+```
 pixi powershell
-´´´
+```
+
 If you want to install an additional package, please use
 
-´´´
+```
 pixi add your-package-name
-´´´
+```
+
 For different CUDA and CPU versions, please refer original SamGeo installation [Here](https://samgeo.gishub.org/installation/)
 
 # Usage
 - Please download this repository, unzip it or use the command line interface 
- ´´´ git clone  https://github.com/getch-geohum/Deep-Learning-Building-Extraction.git
-    cd Deep-Learning-Building-Extraction
- ´´´
 
-then type the following and hit enter, which will redirect to Jupyterlab environment, navigate to **notebooks** folder and run the cells
+```
+git clone  https://github.com/getch-geohum/Deep-Learning-Building-Extraction.git
+cd Deep-Learning-Building-Extraction
+```
 
-´´´
+Then type the following and hit enter, which will redirect to Jupyterlab environment, navigate to **notebooks** folder and run the cells
+
+```
 jupyter lab
-´´´
+```
   
 - SAM3 weights are only accessible from [Hugging Face](https://huggingface.co/) with registration. If you do not have an account on Hugging Face, you have to create an account and request usage for SAM3. Once it is approved, create a token in your Hugging Face account and paste it when it's required. This is mainly for SAM3 interactive segmentation.
 
