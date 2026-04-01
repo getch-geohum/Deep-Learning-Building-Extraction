@@ -34,10 +34,9 @@ Then close and re-open your terminal (or reload your shell) so pixi is on your P
 
 Then initialise the pixi environment using 
 
-´´´
-pixi init extract
+```pixi init extract
 cd extract
-´´´
+```
 
 then edit the ´´´pixi.toml´´´ file to reflect packages we install as:
 
