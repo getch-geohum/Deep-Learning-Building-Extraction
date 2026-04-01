@@ -40,9 +40,9 @@ pixi init extract
 cd extract
 ```
 
-then edit the ´´´pixi.toml´´´ file to reflect packages we install as:
+then edit the ```pixi.toml``` file to reflect packages we install as:
 
-´´´
+```
 [workspace]
 channels = ["https://prefix.dev/conda-forge"]
 name = "geo"
@@ -62,12 +62,13 @@ libopenblas = ">=0.3.30"
 kagglehub = "*"
 fiona = "*"
 ultralytics = "*"
-´´´
+```
 
-Then install the environment as 
-´´´
+Then install the environment as:
+
+```
 pixi install
-´´´
+```
 Then, verify proper installation by running the following in the terminal
 
 ´´´
