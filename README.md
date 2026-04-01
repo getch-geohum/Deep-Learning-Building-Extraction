@@ -23,10 +23,85 @@ Please note that while running the training and inference, try to chnage the run
 
 Please note that these models treat Earth observation images as any image, and there should always be a post-processing phase where model outputs will be converted to geospatial data. 
 
-# Usage 
+# Creation of Environment
+The installation could be done using pixi as follows 
 
-- Please download this repository, unzip and load it to [Google Drive](https://drive.google.com/), which is always easy to bridge with Google Colab.
-- Then, to execute, double-click the Notebooks, and it will redirect to Google Colab. If you want to run in your local environment, please consider installing neccessary packages.
+´´´
+curl -fsSL https://pixi.sh/install.sh | sh
+´´´
+
+Then close and re-open your terminal (or reload your shell) so pixi is on your PATH. Then confirm its proper installation by:
+
+´´´
+pixi --version
+´´´
+
+Then initialise the pixi environment using 
+
+´´´
+pixi init extract
+cd extract
+´´´
+
+then edit the ´´´pixi.toml´´´ file to reflect packages we install as:
+
+´´´
+[workspace]
+channels = ["https://prefix.dev/conda-forge"]
+name = "geo"
+platforms = ["linux-64", "win-64"]
+
+[system-requirements]
+cuda = "12.0"
+
+[dependencies]
+python = "3.12.*"
+pytorch-gpu = ">=2.7.1,<3"
+segment-geospatial = ">=1.2.0"
+sam3 = ">=0.1.0.20251211"
+jupyterlab = "*"
+ipykernel = "*"
+libopenblas = ">=0.3.30"
+kagglehub = "*"
+fiona = "*"
+ultralytics = "*"
+´´´
+
+Then install the environment as 
+´´´
+pixi install
+´´´
+Then, verify proper installation by running the following in the terminal
+
+´´´
+pixi run python -c "import torch; print('PyTorch:', torch.__version__); print('CUDA available:', torch.cuda.is_available()); print('GPU:', (torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'None'))"
+
+´´´
+
+To properly use the installed pixi environment, please run the following in the terminal
+
+´´´
+pixi powershell
+´´´
+If you want to install an additional package, please use
+
+´´´
+pixi add your-package-name
+´´´
+For different CUDA and CPU versions, please refer original SamGeo installation [Here](https://samgeo.gishub.org/installation/)
+
+# Usage
+- Please download this repository, unzip it or use the command line interface 
+ ´´´ git clone  https://github.com/getch-geohum/Deep-Learning-Building-Extraction.git
+    cd Deep-Learning-Building-Extraction
+ ´´´
+
+then type the following and hit enter, which will redirect to Jupyterlab environment, navigate to **notebooks** folder and run the cells
+
+´´´
+jupyter lab
+´´´
+  
 - SAM3 weights are only accessible from [Hugging Face](https://huggingface.co/) with registration. If you do not have an account on Hugging Face, you have to create an account and request usage for SAM3. Once it is approved, create a token in your Hugging Face account and paste it when it's required. This is mainly for SAM3 interactive segmentation.
 
 
