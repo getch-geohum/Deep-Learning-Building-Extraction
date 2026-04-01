@@ -30,9 +30,7 @@ The installation could be done using pixi as follows
 
 Then close and re-open your terminal (or reload your shell) so pixi is on your PATH. Then confirm its proper installation by:
 
-´´´
-pixi --version
-´´´
+```pixi --version```
 
 Then initialise the pixi environment using 
 
