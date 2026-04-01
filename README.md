@@ -26,7 +26,7 @@ Please note that these models treat Earth observation images as any image, and t
 # Creation of Environment
 The installation could be done using pixi as follows 
 
-```curl -fsSL https://pixi.sh/install.sh | sh```
+```bash curl -fsSL https://pixi.sh/install.sh | sh```
 
 Then close and re-open your terminal (or reload your shell) so pixi is on your PATH. Then confirm its proper installation by:
 
